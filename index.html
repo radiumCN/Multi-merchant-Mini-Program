@@ -1,0 +1,1785 @@
+<!-- AI生成 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F3EFE6" />
+<title>市集 · 多商户</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #F3EFE6;
+  --paper-deep: #E9E3D6;
+  --card: #FFFCF6;
+  --ink: #1C1815;
+  --ink-2: #5C534B;
+  --ink-3: #8A7F74;
+  --accent: #E85D04;
+  --accent-deep: #C44A00;
+  --accent-soft: #FFE8D6;
+  --moss: #2F6F4E;
+  --moss-soft: #E2F0E8;
+  --line: rgba(28, 24, 21, 0.1);
+  --line-strong: rgba(28, 24, 21, 0.16);
+  --shadow: 0 10px 30px rgba(28, 24, 21, 0.08);
+  --radius: 18px;
+  --tab-h: 64px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --font-display: "Fraunces", "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-body: "PingFang SC", "Noto Sans SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #fff8ea 0%, transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, #efe6d4 0%, transparent 50%),
+    var(--paper);
+  overflow: hidden;
+}
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed; inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 430px;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+@media (min-width: 480px) {
+  body { display: grid; place-items: center; padding: 18px; }
+  #app {
+    height: min(880px, calc(100vh - 36px));
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 80px rgba(28,24,21,0.18),
+      0 0 0 1px rgba(28,24,21,0.08),
+      0 0 0 10px #1c1815;
+    background: var(--paper);
+  }
+  body::before { border-radius: 28px; }
+}
+
+/* —— typography helpers —— */
+.serif { font-family: var(--font-display); }
+.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+/* —— pages —— */
+.screen {
+  position: absolute;
+  inset: 0 0 var(--tab-h) 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 24px;
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.38s cubic-bezier(.22,.8,.24,1), opacity 0.28s ease;
+}
+.screen.hidden { display: none; }
+.screen.push {
+  inset: 0;
+  z-index: 20;
+  background: var(--paper);
+  box-shadow: -12px 0 40px rgba(28,24,21,0.12);
+}
+.screen.enter-push { transform: translateX(100%); opacity: 0.6; }
+.screen.exit-push { transform: translateX(100%); opacity: 0.6; }
+
+/* —— top bar —— */
+.topbar {
+  padding: 18px 18px 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.loc {
+  display: flex; flex-direction: column; gap: 2px; min-width: 0;
+}
+.loc-label {
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3); font-family: var(--font-display); font-style: italic;
+}
+.loc-name {
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; gap: 6px;
+}
+.loc-name svg { width: 12px; height: 12px; opacity: 0.55; }
+
+.search {
+  flex: 1;
+  height: 42px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 14px;
+  color: var(--ink-3);
+  font-size: 13px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.search svg { width: 15px; height: 15px; opacity: 0.55; flex: none; }
+
+/* —— category chips —— */
+.chips {
+  display: flex;
+  gap: 8px;
+  padding: 8px 18px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink-2);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  transition: all 0.2s ease;
+}
+.chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+/* —— section head —— */
+.sec-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 22px 18px 12px;
+}
+.sec-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.sec-title em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+  margin-right: 6px;
+}
+.sec-meta {
+  font-family: var(--font-display);
+  font-size: 12px; color: var(--ink-3); font-style: italic;
+}
+
+/* —— hero ticket card —— */
+.ticket {
+  margin: 0 18px 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.ticket:active { transform: scale(0.985); }
+.ticket-stub {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      var(--paper-deep) 0 6px,
+      transparent 6px 12px
+    );
+  border-right: 1px dashed var(--line-strong);
+  position: relative;
+}
+.ticket-stub::before,
+.ticket-stub::after {
+  content: "";
+  position: absolute;
+  left: -6px; width: 12px; height: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.ticket-stub::before { top: -7px; }
+.ticket-stub::after { bottom: -7px; }
+
+.ticket-body { display: flex; flex-direction: column; }
+.ticket-cover {
+  height: 148px;
+  position: relative;
+  overflow: hidden;
+  background: #ddd;
+}
+.ticket-cover .cover-art {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 56px; font-weight: 700;
+  color: rgba(255,255,255,0.22);
+  letter-spacing: 0.08em;
+}
+.ticket-cover .veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(28,24,21,0) 30%, rgba(28,24,21,0.55) 100%);
+}
+.ticket-cover .rank {
+  position: absolute; top: 12px; left: 12px;
+  font-family: var(--font-display);
+  font-size: 11px; letter-spacing: 0.16em;
+  color: #fff; background: rgba(28,24,21,0.45);
+  backdrop-filter: blur(8px);
+  padding: 5px 10px; border-radius: 999px;
+}
+.stamp {
+  position: absolute; top: 10px; right: 10px;
+  width: 52px; height: 52px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  color: #fff;
+  transform: rotate(12deg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  background: rgba(232, 93, 4, 0.75);
+  backdrop-filter: blur(4px);
+}
+.stamp .score { font-family: var(--font-display); font-size: 16px; font-weight: 700; line-height: 1; }
+.stamp .lbl { font-size: 8px; letter-spacing: 0.12em; margin-top: 2px; opacity: 0.9; }
+
+.ticket-info { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+.ticket-title-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.ticket-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.ticket-sub {
+  font-family: var(--font-display);
+  font-style: italic; color: var(--ink-3); font-size: 12px;
+}
+.meta-row {
+  display: flex; flex-wrap: wrap; gap: 8px 12px;
+  font-size: 12px; color: var(--ink-2);
+}
+.meta-row .dot { opacity: 0.35; }
+.meta-row b {
+  font-family: var(--font-display);
+  color: var(--ink); font-weight: 700;
+}
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+.tag.moss { background: var(--moss-soft); color: var(--moss); }
+
+/* —— merchant list cards —— */
+.m-list { padding: 0 18px; display: flex; flex-direction: column; gap: 12px; }
+.m-card {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 12px;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.m-card:active { transform: scale(0.98); }
+.m-thumb {
+  width: 88px; height: 88px;
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.m-thumb .badge {
+  position: absolute; bottom: 6px; left: 6px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  background: rgba(28,24,21,0.55);
+  color: #fff;
+  padding: 2px 6px; border-radius: 4px;
+}
+.m-body { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+.m-name {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.m-desc {
+  font-size: 12px; color: var(--ink-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.m-stats {
+  display: flex; gap: 10px; align-items: center;
+  font-size: 12px; color: var(--ink-2);
+}
+.score-sm {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* —— bottom tab —— */
+.tabbar {
+  height: calc(var(--tab-h) + var(--safe-b));
+  padding-bottom: var(--safe-b);
+  border-top: 1px solid var(--line);
+  background: rgba(255, 252, 246, 0.92);
+  backdrop-filter: blur(16px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  z-index: 30;
+  position: relative;
+}
+.tab {
+  border: 0; background: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px;
+  color: var(--ink-3);
+  font-size: 11px;
+  position: relative;
+  cursor: pointer;
+}
+.tab svg { width: 22px; height: 22px; }
+.tab.active { color: var(--ink); }
+.tab.active .tab-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--accent);
+  position: absolute; top: 8px;
+}
+.tab .cart-badge {
+  position: absolute;
+  top: 8px; right: calc(50% - 22px);
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px; font-family: var(--font-display); font-weight: 700;
+  display: grid; place-items: center;
+  transform: scale(0);
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+.tab .cart-badge.show { transform: scale(1); }
+
+/* —— merchant page —— */
+.m-hero {
+  height: 210px;
+  position: relative;
+  overflow: hidden;
+}
+.m-hero .cover-art {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 96px; font-weight: 700;
+  color: rgba(255,255,255,0.18);
+}
+.m-hero .veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(28,24,21,0.25) 0%, rgba(28,24,21,0.05) 40%, rgba(243,239,230,1) 100%);
+}
+.back-btn {
+  position: absolute; top: 16px; left: 16px; z-index: 5;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255,252,246,0.9);
+  display: grid; place-items: center;
+  cursor: pointer;
+}
+.back-btn svg { width: 16px; height: 16px; }
+
+.m-panel {
+  margin: -48px 18px 0;
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+.m-panel h1 {
+  font-family: var(--font-display);
+  font-size: 26px; letter-spacing: -0.03em;
+  display: flex; align-items: center; gap: 8px;
+}
+.open-pill {
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--moss-soft);
+  color: var(--moss);
+  font-weight: 500;
+}
+.m-panel .en {
+  font-family: var(--font-display);
+  font-style: italic; color: var(--ink-3); font-size: 13px;
+  margin-top: 4px;
+}
+.m-facts {
+  margin-top: 14px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line-strong);
+}
+.fact { text-align: center; }
+.fact .v {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700;
+}
+.fact .k {
+  font-size: 11px; color: var(--ink-3); margin-top: 2px;
+}
+
+.cat-tabs {
+  display: flex; gap: 8px;
+  padding: 18px 18px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cat-tabs::-webkit-scrollbar { display: none; }
+
+.p-list { padding: 8px 18px 120px; display: flex; flex-direction: column; gap: 12px; }
+.p-card {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 12px;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.p-thumb {
+  width: 84px; height: 84px;
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 22px; color: rgba(255,255,255,0.35);
+  font-weight: 700;
+}
+.p-body { display: flex; flex-direction: column; min-width: 0; }
+.p-name {
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700;
+}
+.p-desc {
+  font-size: 12px; color: var(--ink-3);
+  margin-top: 4px; flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.p-foot {
+  margin-top: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.price {
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 18px;
+  color: var(--accent-deep);
+}
+.price span { font-size: 12px; margin-right: 1px; }
+.stepper { display: flex; align-items: center; gap: 8px; }
+.step-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--card);
+  display: grid; place-items: center;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 16px; color: var(--ink);
+  line-height: 1;
+}
+.step-btn.plus {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.step-btn:active { transform: scale(0.92); }
+.qty {
+  font-family: var(--font-display);
+  font-weight: 700; min-width: 18px; text-align: center;
+}
+
+/* floating cart bar on merchant page */
+.float-bar {
+  position: absolute;
+  left: 18px; right: 18px;
+  bottom: calc(18px + var(--safe-b));
+  height: 56px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex; align-items: center;
+  padding: 0 8px 0 20px;
+  gap: 12px;
+  box-shadow: 0 16px 40px rgba(28,24,21,0.28);
+  z-index: 25;
+}
+.float-bar.hidden { display: none !important; }
+.float-bar .left {
+  display: flex; flex-direction: column; flex: 1;
+}
+.float-bar .label {
+  font-family: var(--font-display);
+  font-style: italic; font-size: 11px; opacity: 0.7;
+}
+.float-bar .total {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700;
+}
+.float-bar .go {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 14px;
+  cursor: pointer;
+}
+.float-bar .go:disabled {
+  opacity: 0.4;
+}
+
+/* —— cart page —— */
+.page-pad { padding: 8px 18px 120px; }
+.group {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.group-head {
+  padding: 14px 14px 10px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px dashed var(--line-strong);
+}
+.group-logo {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  color: rgba(255,255,255,0.35);
+  font-weight: 700; font-size: 14px;
+}
+.group-name {
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 15px;
+  flex: 1;
+}
+.split-note {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+.group .p-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.group .p-card + .p-card {
+  border-top: 1px solid var(--line);
+}
+.cart-footer {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: calc(var(--tab-h) + var(--safe-b));
+  height: 64px;
+  background: rgba(255,252,246,0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center;
+  padding: 0 18px;
+  gap: 12px;
+  z-index: 15;
+}
+.cart-footer .sum { flex: 1; }
+.cart-footer .sum .k { font-size: 11px; color: var(--ink-3); }
+.cart-footer .sum .v {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700;
+  color: var(--accent-deep);
+}
+.checkout-btn {
+  height: 44px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 15px;
+  cursor: pointer;
+}
+.checkout-btn:disabled { opacity: 0.4; }
+
+.notice {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 12px;
+  background: rgba(255,252,246,0.6);
+  font-size: 12px; color: var(--ink-2);
+  line-height: 1.5;
+}
+.notice b { color: var(--accent-deep); font-family: var(--font-display); }
+
+/* empty state */
+.empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--ink-3);
+}
+.empty .icon {
+  width: 72px; height: 72px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  border: 1px dashed var(--line-strong);
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 28px;
+}
+.empty h3 {
+  font-family: var(--font-display);
+  font-size: 18px; color: var(--ink); margin-bottom: 6px;
+}
+.empty p { font-size: 13px; }
+
+/* —— orders —— */
+.order-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.order-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.order-shop {
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 15px;
+}
+.order-status {
+  font-size: 12px;
+  color: var(--moss);
+  font-family: var(--font-display);
+  font-style: italic;
+}
+.order-status.done { color: var(--ink-3); }
+.order-items {
+  font-size: 12px; color: var(--ink-2);
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--line);
+  margin-bottom: 10px;
+}
+.order-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--ink-3);
+}
+.order-foot .amt {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--ink);
+}
+
+/* —— me page —— */
+.me-card {
+  margin: 8px 18px 18px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(145deg, #1c1815 0%, #2a241f 60%, #3a2a1c 100%);
+  color: var(--paper);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.me-card::after {
+  content: "MEMBER";
+  position: absolute;
+  right: -8px; bottom: 8px;
+  font-family: var(--font-display);
+  font-size: 56px; font-style: italic;
+  opacity: 0.06;
+  letter-spacing: 0.08em;
+}
+.me-row { display: flex; align-items: center; gap: 14px; }
+.avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #f4a261);
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700;
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.25);
+}
+.me-name {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700;
+}
+.me-id {
+  font-family: var(--font-display);
+  font-style: italic;
+  opacity: 0.55; font-size: 12px; margin-top: 2px;
+}
+.me-stats {
+  margin-top: 20px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.me-stats .v {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700;
+}
+.me-stats .k { font-size: 11px; opacity: 0.55; margin-top: 2px; }
+
+.menu-list {
+  margin: 0 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.menu-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.menu-item:last-child { border-bottom: 0; }
+.menu-item .right {
+  color: var(--ink-3); font-size: 13px;
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-display); font-style: italic;
+}
+
+/* —— checkout / success stack —— */
+.stack-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 18px 8px;
+}
+.stack-head h2 {
+  font-family: var(--font-display);
+  font-size: 22px; letter-spacing: -0.02em;
+}
+.back-btn.static {
+  position: static;
+}
+.form-card {
+  margin: 8px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+}
+.form-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px dashed var(--line);
+}
+.form-row:last-child { border-bottom: 0; }
+.form-row .k { color: var(--ink-2); }
+.form-row .v {
+  font-family: var(--font-display);
+  font-weight: 700; text-align: right;
+  max-width: 60%;
+}
+.form-row .v.muted { color: var(--ink-3); font-weight: 500; font-style: italic; }
+
+.pay-btn {
+  display: block;
+  width: calc(100% - 36px);
+  margin: 18px;
+  height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.success-wrap {
+  padding: 48px 24px;
+  text-align: center;
+}
+.success-seal {
+  width: 96px; height: 96px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  color: var(--accent);
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700;
+  letter-spacing: 0.08em;
+  transform: rotate(-8deg);
+  box-shadow: 0 0 0 6px rgba(232,93,4,0.08);
+}
+.success-wrap h2 {
+  font-family: var(--font-display);
+  font-size: 26px; margin-bottom: 8px;
+}
+.success-wrap p {
+  color: var(--ink-3); font-size: 13px; line-height: 1.6;
+}
+.success-wrap .ghost {
+  margin-top: 28px;
+  height: 48px;
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--card);
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700;
+  cursor: pointer;
+}
+
+/* —— sheet / modal —— */
+.mask {
+  position: absolute; inset: 0;
+  background: rgba(28,24,21,0.4);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  backdrop-filter: blur(2px);
+}
+.mask.show { opacity: 1; pointer-events: auto; }
+
+.sheet {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  background: var(--card);
+  border-radius: 24px 24px 0 0;
+  padding: 12px 18px calc(24px + var(--safe-b));
+  transform: translateY(110%);
+  transition: transform 0.35s cubic-bezier(.22,.8,.24,1);
+  max-height: 82%;
+  overflow-y: auto;
+}
+.sheet.show { transform: translateY(0); }
+.sheet-handle {
+  width: 36px; height: 4px;
+  border-radius: 999px;
+  background: var(--line-strong);
+  margin: 0 auto 16px;
+}
+.sheet h3 {
+  font-family: var(--font-display);
+  font-size: 20px; margin-bottom: 6px;
+}
+.sheet .sub {
+  font-family: var(--font-display);
+  font-style: italic; color: var(--ink-3); font-size: 12px;
+  margin-bottom: 14px;
+}
+.sheet-actions {
+  display: flex; gap: 10px; margin-top: 18px;
+}
+.sheet-actions button {
+  flex: 1;
+  height: 48px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  font-family: var(--font-display);
+  font-size: 15px; font-weight: 700;
+  cursor: pointer;
+}
+.sheet-actions button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* fly-to-cart dot */
+.fly-dot {
+  position: fixed;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(232,93,4,0.4);
+}
+
+/* toast */
+.toast {
+  position: absolute;
+  left: 50%; top: 22%;
+  transform: translate(-50%, -10px);
+  background: rgba(28,24,21,0.88);
+  color: var(--paper);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  z-index: 80;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* color themes per merchant */
+.bg-1 { background: linear-gradient(145deg, #C45C26 0%, #E85D04 50%, #F4A261 100%); }
+.bg-2 { background: linear-gradient(145deg, #5C4033 0%, #8B5E3C 50%, #C4A484 100%); }
+.bg-3 { background: linear-gradient(145deg, #9B2226 0%, #BB3E03 50%, #EE9B00 100%); }
+.bg-4 { background: linear-gradient(145deg, #2D6A4F 0%, #40916C 50%, #95D5B2 100%); }
+.bg-5 { background: linear-gradient(145deg, #3D405B 0%, #5C6B9A 50%, #A8B2D1 100%); }
+.bg-6 { background: linear-gradient(145deg, #6B4F3A 0%, #A67C52 50%, #E8C39E 100%); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<p data-aigc-mark="1" style="margin:0 0 8px;font-size:10px;line-height:1.3;color:#6b6560;font-weight:400;">AI生成</p>
+
+<div id="app">
+  <!-- HOME -->
+  <section class="screen" id="screen-home">
+    <div class="topbar">
+      <div class="loc">
+        <div class="loc-label">Deliver to</div>
+        <div class="loc-name">
+          创意园 · A座
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+        搜商户、菜名、书名
+      </div>
+    </div>
+
+    <div class="chips" id="home-chips"></div>
+
+    <div class="sec-head">
+      <h2 class="sec-title"><em>No.01</em>本周主理人</h2>
+      <div class="sec-meta">curated weekly</div>
+    </div>
+    <div id="hero-slot"></div>
+
+    <div class="sec-head">
+      <h2 class="sec-title"><em>ALL</em>附近商户</h2>
+      <div class="sec-meta" id="m-count"></div>
+    </div>
+    <div class="m-list" id="merchant-list"></div>
+  </section>
+
+  <!-- CART -->
+  <section class="screen hidden" id="screen-cart">
+    <div class="sec-head">
+      <h2 class="sec-title"><em>BAG</em>购物车</h2>
+      <div class="sec-meta" id="cart-meta"></div>
+    </div>
+    <div class="page-pad" id="cart-body" style="padding-top:0"></div>
+  </section>
+  <div class="cart-footer hidden" id="cart-footer">
+    <div class="sum">
+      <div class="k">合计（不含配送）</div>
+      <div class="v">¥ <span id="cart-total">0</span></div>
+    </div>
+    <button class="checkout-btn" id="btn-checkout">去结算</button>
+  </div>
+
+  <!-- ORDERS -->
+  <section class="screen hidden" id="screen-orders">
+    <div class="sec-head">
+      <h2 class="sec-title"><em>BILL</em>订单</h2>
+      <div class="sec-meta">receipts</div>
+    </div>
+    <div class="page-pad" id="orders-body" style="padding-top:0"></div>
+  </section>
+
+  <!-- ME -->
+  <section class="screen hidden" id="screen-me">
+    <div class="sec-head">
+      <h2 class="sec-title"><em>ME</em>我的</h2>
+      <div class="sec-meta">passport</div>
+    </div>
+    <div class="me-card">
+      <div class="me-row">
+        <div class="avatar">集</div>
+        <div>
+          <div class="me-name">市集常客</div>
+          <div class="me-id">Member · No. 0826</div>
+        </div>
+      </div>
+      <div class="me-stats">
+        <div><div class="v" id="me-orders">0</div><div class="k">订单</div></div>
+        <div><div class="v">128</div><div class="k">积分</div></div>
+        <div><div class="v">3</div><div class="k">收藏</div></div>
+      </div>
+    </div>
+    <div class="menu-list">
+      <div class="menu-item" data-goto="orders">我的订单 <span class="right">全部 ›</span></div>
+      <div class="menu-item">收货地址 <span class="right">创意园 A座 ›</span></div>
+      <div class="menu-item">优惠券 <span class="right">2 张可用 ›</span></div>
+      <div class="menu-item">开发票 <span class="right">›</span></div>
+      <div class="menu-item">关于市集 <span class="right">v1.0 ›</span></div>
+    </div>
+  </section>
+
+  <!-- MERCHANT (push) -->
+  <section class="screen push hidden enter-push" id="screen-merchant">
+    <div class="m-hero" id="m-hero">
+      <div class="back-btn" data-back>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="cover-art" id="m-hero-art"></div>
+      <div class="veil"></div>
+    </div>
+    <div class="m-panel">
+      <h1 id="m-title"><span class="open-pill">营业中</span></h1>
+      <div class="en" id="m-en"></div>
+      <div class="m-facts" id="m-facts"></div>
+    </div>
+    <div class="cat-tabs chips" id="m-cats"></div>
+    <div class="p-list" id="m-products"></div>
+  </section>
+
+  <div class="float-bar hidden" id="m-float">
+    <div class="left">
+      <div class="label">本店合计</div>
+      <div class="total">¥ <span id="m-float-total">0</span></div>
+    </div>
+    <button class="go" id="m-float-go">去结算</button>
+  </div>
+
+  <!-- CHECKOUT (push) -->
+  <section class="screen push hidden enter-push" id="screen-checkout">
+    <div class="stack-head">
+      <button class="back-btn static" data-back>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 class="serif">确认订单</h2>
+    </div>
+    <div id="checkout-body"></div>
+    <button class="pay-btn" id="btn-pay">微信支付 ¥ <span id="pay-amt">0</span></button>
+  </section>
+
+  <!-- SUCCESS (push) -->
+  <section class="screen push hidden enter-push" id="screen-success">
+    <div class="success-wrap">
+      <div class="success-seal">已受理</div>
+      <h2 class="serif">下单成功</h2>
+      <p id="success-msg"></p>
+      <button class="ghost" id="btn-success-orders">查看订单</button>
+    </div>
+  </section>
+
+  <!-- TABBAR -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tab active" data-tab="home">
+      <span class="tab-dot"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1v-9.5z"/></svg>
+      逛市集
+    </button>
+    <button class="tab" data-tab="cart">
+      <span class="tab-dot"></span>
+      <span class="cart-badge" id="tab-badge">0</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7L5 3H2"/><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg>
+      购物车
+    </button>
+    <button class="tab" data-tab="orders">
+      <span class="tab-dot"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      订单
+    </button>
+    <button class="tab" data-tab="me">
+      <span class="tab-dot"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9" r="3.5"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg>
+      我的
+    </button>
+  </nav>
+
+  <div class="mask" id="mask"></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ========== 数据：多商户市集 ========== */
+const MERCHANTS = [
+  {
+    id: 's1', name: '山野食堂', en: 'Yama Shokudo', cat: '美食',
+    art: '山', theme: 1, score: 4.9, sales: 2100, dist: '0.8km', eta: '28min',
+    fee: 3, min: 20, tags: ['日式定食', '现做现送'], hero: true,
+    blurb: '一碗汤、一份定食，把山里的节奏带回办公桌。',
+    products: [
+      { id: 'p1', name: '炭烤鲭鱼定食', desc: '炭火烤鲭鱼 · 味噌汤 · 三色米饭 · 渍物', price: 42, cat: '定食' },
+      { id: 'p2', name: '慢煮牛肋条', desc: '低温慢煮 6 小时，配山葵与海盐', price: 58, cat: '定食' },
+      { id: 'p3', name: '野菜天妇罗拼盘', desc: '时蔬天妇罗 · 蘸汁另附', price: 32, cat: '小食' },
+      { id: 'p4', name: '梅子苏打', desc: '纪州梅 · 气泡水 · 自制糖浆', price: 16, cat: '饮品' },
+      { id: 'p5', name: '玄米茶', desc: '冷萃玄米，回甘清爽', price: 12, cat: '饮品' }
+    ]
+  },
+  {
+    id: 's2', name: '南巷咖啡', en: 'South Lane Coffee', cat: '咖啡',
+    art: '南', theme: 2, score: 4.8, sales: 3400, dist: '1.2km', eta: '20min',
+    fee: 2, min: 15, tags: ['自家烘焙', '手冲'], hero: false,
+    blurb: '南巷转角的小烘焙室，豆子自己烘，杯子自己选。',
+    products: [
+      { id: 'p6', name: '桂花拿铁', desc: '桂花糖浆 · 全脂牛奶 · 双份浓缩', price: 28, cat: '咖啡' },
+      { id: 'p7', name: '云南日晒手冲', desc: '花香与莓果酸质，可选冰/热', price: 32, cat: '手冲' },
+      { id: 'p8', name: '可颂', desc: '黄油层压 27 层，当日现烤', price: 18, cat: '烘焙' },
+      { id: 'p9', name: '冷萃气泡美式', desc: '冷萃基底 · 柠檬皮 · 气泡', price: 26, cat: '咖啡' }
+    ]
+  },
+  {
+    id: 's3', name: '蜀味九宫', en: 'Shu Nine Grid', cat: '美食',
+    art: '蜀', theme: 3, score: 4.7, sales: 1800, dist: '2.0km', eta: '35min',
+    fee: 5, min: 40, tags: ['川渝火锅', '可配送锅底'], hero: false,
+    blurb: '锅底现炒，九宫格的意义是让每样菜都有位置。',
+    products: [
+      { id: 'p10', name: '牛油锅底（1-2人）', desc: '三斤牛油 · 朝天椒 · 可调辣度', price: 48, cat: '锅底' },
+      { id: 'p11', name: '现炸酥肉', desc: '花椒腌渍，外脆里嫩', price: 26, cat: '涮品' },
+      { id: 'p12', name: '手打虾滑', desc: '青虾仁 80%，弹牙', price: 36, cat: '涮品' },
+      { id: 'p13', name: '冰粉', desc: '红糖 · 葡萄干 · 花生碎', price: 12, cat: '甜品' }
+    ]
+  },
+  {
+    id: 's4', name: '花间集', en: 'Among Flowers', cat: '鲜花',
+    art: '花', theme: 4, score: 4.9, sales: 620, dist: '1.5km', eta: '45min',
+    fee: 6, min: 30, tags: ['同城当日达', '可写贺卡'], hero: false,
+    blurb: '每周空运的时令切花，扎成可以带走的小风景。',
+    products: [
+      { id: 'p14', name: '春日混合花束', desc: '洋桔梗 · 尤加利 · 满天星', price: 98, cat: '花束' },
+      { id: 'p15', name: '白瓷小原玉', desc: '多肉组合 · 附养护卡', price: 68, cat: '绿植' },
+      { id: 'p16', name: '香氛蜡烛 · 雪松', desc: '大豆蜡 · 燃烧约 28 小时', price: 88, cat: '香氛' }
+    ]
+  },
+  {
+    id: 's5', name: '老街书屋', en: 'Old Street Books', cat: '书店',
+    art: '書', theme: 5, score: 4.8, sales: 430, dist: '0.4km', eta: '30min',
+    fee: 4, min: 25, tags: ['独立出版', '可代找绝版'], hero: false,
+    blurb: '一家只卖自己喜欢的书的小店，也卖阅读时的茶。',
+    products: [
+      { id: 'p17', name: '城市漫游指南（套装）', desc: '主编亲选 4 本 · 含藏书票', price: 156, cat: '套装' },
+      { id: 'p18', name: '单本精选', desc: '本周主推：散文与建筑', price: 58, cat: '单本' },
+      { id: 'p19', name: '阅读红茶', desc: '锡兰拼配 · 适合久泡', price: 24, cat: '茶点' }
+    ]
+  },
+  {
+    id: 's6', name: '海盐烘焙', en: 'Sea Salt Bake', cat: '甜点',
+    art: '盐', theme: 6, score: 4.6, sales: 2600, dist: '1.8km', eta: '25min',
+    fee: 3, min: 20, tags: ['低糖可选', '当日现烤'], hero: false,
+    blurb: '少一点糖，多一点黄油香，是海盐的算盘。',
+    products: [
+      { id: 'p20', name: '海盐芝士蛋糕', desc: '北海道奶油乳酪 · 迷迭香海盐', price: 36, cat: '蛋糕' },
+      { id: 'p21', name: '生椰可可卷', desc: '可可海绵 · 生椰乳馅', price: 28, cat: '蛋糕' },
+      { id: 'p22', name: '黑糖珍珠泡芙', desc: '现灌馅 · 珍珠当日煮', price: 18, cat: '小食' }
+    ]
+  }
+];
+
+const CATS = ['全部', '美食', '咖啡', '鲜花', '书店', '甜点'];
+
+/* ========== 状态 ========== */
+const state = {
+  tab: 'home',
+  stack: [],           // push pages
+  cart: {},            // merchantId -> { productId: qty }
+  orders: [],
+  currentMerchant: null,
+  homeCat: '全部',
+  mCat: null
+};
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+function cartCount() {
+  let n = 0;
+  for (const mid in state.cart) {
+    for (const pid in state.cart[mid]) n += state.cart[mid][pid];
+  }
+  return n;
+}
+
+function merchantById(id) { return MERCHANTS.find(m => m.id === id); }
+function productById(mid, pid) {
+  const m = merchantById(mid);
+  return m && m.products.find(p => p.id === pid);
+}
+
+function merchantSubtotal(mid) {
+  const bag = state.cart[mid] || {};
+  let sum = 0, count = 0;
+  for (const pid in bag) {
+    const p = productById(mid, pid);
+    if (!p) continue;
+    sum += p.price * bag[pid];
+    count += bag[pid];
+  }
+  return { sum, count };
+}
+
+function cartGroups() {
+  const out = [];
+  for (const mid in state.cart) {
+    const { sum, count } = merchantSubtotal(mid);
+    if (count > 0) out.push({ mid, sum, count, bag: state.cart[mid] });
+  }
+  return out;
+}
+
+function cartTotal() {
+  return cartGroups().reduce((s, g) => s + g.sum, 0);
+}
+
+/* ========== 工具 ========== */
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove('show'), 1600);
+}
+
+function qtyOf(mid, pid) {
+  return (state.cart[mid] && state.cart[mid][pid]) || 0;
+}
+
+function setQty(mid, pid, qty) {
+  if (!state.cart[mid]) state.cart[mid] = {};
+  if (qty <= 0) delete state.cart[mid][pid];
+  else state.cart[mid][pid] = qty;
+  if (state.cart[mid] && !Object.keys(state.cart[mid]).length) delete state.cart[mid];
+  syncBadges();
+}
+
+function syncBadges() {
+  const n = cartCount();
+  const b = $('#tab-badge');
+  b.textContent = n;
+  b.classList.toggle('show', n > 0);
+  $('#me-orders').textContent = state.orders.length;
+  $('#btn-checkout').disabled = n === 0;
+}
+
+function flyDot(fromEl) {
+  const cartTab = $('[data-tab="cart"]');
+  const a = fromEl.getBoundingClientRect();
+  const b = cartTab.getBoundingClientRect();
+  const dot = document.createElement('div');
+  dot.className = 'fly-dot';
+  dot.style.left = (a.left + a.width / 2 - 7) + 'px';
+  dot.style.top = (a.top + a.height / 2 - 7) + 'px';
+  document.body.appendChild(dot);
+  requestAnimationFrame(() => {
+    dot.style.transition = 'transform 0.55s cubic-bezier(.4,0,.2,1), opacity 0.55s ease';
+    dot.style.transform = `translate(${b.left + b.width / 2 - (a.left + a.width / 2)}px, ${b.top + 16 - (a.top + a.height / 2)}px) scale(0.4)`;
+    dot.style.opacity = '0.4';
+  });
+  setTimeout(() => dot.remove(), 600);
+}
+
+/* ========== 渲染：首页 ========== */
+function renderHomeChips() {
+  const el = $('#home-chips');
+  el.innerHTML = CATS.map(c =>
+    `<button class="chip ${c === state.homeCat ? 'active' : ''}" data-chip="${c}">${c}</button>`
+  ).join('');
+}
+
+function ticketHTML(m) {
+  return `
+  <article class="ticket" data-merchant="${m.id}">
+    <div class="ticket-stub"></div>
+    <div class="ticket-body">
+      <div class="ticket-cover bg-${m.theme}">
+        <div class="cover-art">${m.art}</div>
+        <div class="veil"></div>
+        <div class="rank">FEATURED · 主理人</div>
+        <div class="stamp"><div class="score">${m.score}</div><div class="lbl">SCORE</div></div>
+      </div>
+      <div class="ticket-info">
+        <div class="ticket-title-row">
+          <div class="ticket-title">${m.name}</div>
+          <div class="ticket-sub">${m.en}</div>
+        </div>
+        <div class="meta-row">
+          <span>评分 <b>${m.score}</b></span><span class="dot">·</span>
+          <span>月售 <b>${m.sales}</b></span><span class="dot">·</span>
+          <span><b>${m.dist}</b></span><span class="dot">·</span>
+          <span>约 <b>${m.eta}</b></span>
+        </div>
+        <div class="tag-row">
+          ${m.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+          <span class="tag moss">起送 ¥${m.min} · 配送 ¥${m.fee}</span>
+        </div>
+      </div>
+    </div>
+  </article>`;
+}
+
+function merchantCardHTML(m) {
+  return `
+  <article class="m-card" data-merchant="${m.id}">
+    <div class="m-thumb bg-${m.theme}">${m.art}<span class="badge">${m.cat}</span></div>
+    <div class="m-body">
+      <div class="m-name">${m.name}</div>
+      <div class="m-desc">${m.blurb}</div>
+      <div class="m-stats">
+        <span class="score-sm">★ ${m.score}</span>
+        <span>月售 ${m.sales}</span>
+        <span>${m.dist}</span>
+        <span>${m.eta}</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderHome() {
+  renderHomeChips();
+  const list = MERCHANTS.filter(m => state.homeCat === '全部' || m.cat === state.homeCat);
+  const hero = list.find(m => m.hero) || list[0];
+  $('#hero-slot').innerHTML = hero ? ticketHTML(hero) : '';
+  const rest = list.filter(m => !hero || m.id !== hero.id);
+  $('#merchant-list').innerHTML = rest.map(merchantCardHTML).join('');
+  $('#m-count').textContent = `${list.length} shops`;
+}
+
+/* ========== 渲染：商户 ========== */
+function productCardHTML(m, p) {
+  const q = qtyOf(m.id, p.id);
+  return `
+  <article class="p-card" data-pid="${p.id}" data-mid="${m.id}">
+    <div class="p-thumb bg-${m.theme}">${p.name.slice(0, 1)}</div>
+    <div class="p-body">
+      <div class="p-name">${p.name}</div>
+      <div class="p-desc">${p.desc}</div>
+      <div class="p-foot">
+        <div class="price"><span>¥</span>${p.price}</div>
+        <div class="stepper">
+          ${q > 0 ? `<button class="step-btn" data-act="dec" data-mid="${m.id}" data-pid="${p.id}">−</button><span class="qty">${q}</span>` : ''}
+          <button class="step-btn plus" data-act="inc" data-mid="${m.id}" data-pid="${p.id}">+</button>
+        </div>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderMerchant() {
+  const m = state.currentMerchant;
+  if (!m) return;
+  $('#m-hero').className = `m-hero`;
+  $('#m-hero-art').textContent = m.art;
+  $('#m-hero-art').className = `cover-art bg-${m.theme}`;
+  $('#m-title').innerHTML = `${m.name} <span class="open-pill">营业中</span>`;
+  $('#m-en').textContent = `${m.en} · ${m.cat} · ${m.blurb}`;
+  $('#m-facts').innerHTML = `
+    <div class="fact"><div class="v">${m.score}</div><div class="k">评分</div></div>
+    <div class="fact"><div class="v">${m.sales}</div><div class="k">月售</div></div>
+    <div class="fact"><div class="v">${m.eta}</div><div class="k">送达</div></div>`;
+
+  const cats = ['全部', ...new Set(m.products.map(p => p.cat))];
+  if (!state.mCat || !cats.includes(state.mCat)) state.mCat = '全部';
+  $('#m-cats').innerHTML = cats.map(c =>
+    `<button class="chip ${c === state.mCat ? 'active' : ''}" data-mcat="${c}">${c}</button>`
+  ).join('');
+
+  const products = m.products.filter(p => state.mCat === '全部' || p.cat === state.mCat);
+  $('#m-products').innerHTML = products.map(p => productCardHTML(m, p)).join('');
+
+  const { sum, count } = merchantSubtotal(m.id);
+  const bar = $('#m-float');
+  bar.classList.toggle('hidden', count === 0);
+  $('#m-float-total').textContent = sum;
+  $('#m-float-go').disabled = sum < m.min;
+  $('#m-float-go').textContent = sum < m.min ? `差 ¥${m.min - sum} 起送` : '去结算';
+}
+
+/* ========== 渲染：购物车 ========== */
+function renderCart() {
+  const groups = cartGroups();
+  const body = $('#cart-body');
+  $('#cart-meta').textContent = groups.length ? `${groups.length} shops` : 'empty';
+
+  if (!groups.length) {
+    body.innerHTML = `
+      <div class="empty">
+        <div class="icon">袋</div>
+        <h3 class="serif">购物车是空的</h3>
+        <p>去市集逛逛，把喜欢的装进来</p>
+      </div>`;
+    $('#cart-footer').classList.add('hidden');
+    $('#cart-footer').style.display = 'none';
+    syncBadges();
+    return;
+  }
+
+  const noticeHTML = groups.length > 1
+    ? `<div class="notice">车里有 <b>${groups.length} 家商户</b> 的商品，结算后将生成 <b>${groups.length} 张订单</b>，各自配送。</div>`
+    : '';
+
+  body.innerHTML = noticeHTML + groups.map(g => {
+    const m = merchantById(g.mid);
+    const items = Object.keys(g.bag).map(pid => {
+      const p = productById(g.mid, pid);
+      return productCardHTML(m, p);
+    }).join('');
+    return `
+    <section class="group">
+      <div class="group-head">
+        <div class="group-logo bg-${m.theme}">${m.art}</div>
+        <div class="group-name">${m.name}</div>
+        ${groups.length > 1 ? '<span class="split-note">独立配送</span>' : ''}
+      </div>
+      ${items}
+      <div style="padding:10px 14px 14px;display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2)">
+        <span>起送 ¥${m.min} · 配送 ¥${m.fee}</span>
+        <span class="serif">小计 <b style="color:var(--accent-deep)">¥${g.sum}</b></span>
+      </div>
+    </section>`;
+  }).join('');
+
+  $('#cart-footer').classList.remove('hidden');
+  $('#cart-footer').style.display = 'flex';
+  $('#cart-total').textContent = cartTotal();
+  syncBadges();
+}
+
+/* ========== 渲染：订单 ========== */
+function renderOrders() {
+  const body = $('#orders-body');
+  if (!state.orders.length) {
+    body.innerHTML = `
+      <div class="empty">
+        <div class="icon">单</div>
+        <h3 class="serif">还没有订单</h3>
+        <p>点点什么，这里就会留下小票</p>
+      </div>`;
+    return;
+  }
+  body.innerHTML = state.orders.map(o => {
+    const m = merchantById(o.mid);
+    const items = o.items.map(it => `${it.name}×${it.qty}`).join('、');
+    return `
+    <article class="order-card">
+      <div class="order-top">
+        <div class="order-shop">${m.name}</div>
+        <div class="order-status ${o.status === '已完成' ? 'done' : ''}">${o.status}</div>
+      </div>
+      <div class="order-items">${items}</div>
+      <div class="order-foot">
+        <span>${o.time} · ${o.id}</span>
+        <span class="amt">¥${o.total}</span>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+/* ========== 结算页 ========== */
+function renderCheckout(fromMerchantId) {
+  const groups = fromMerchantId
+    ? cartGroups().filter(g => g.mid === fromMerchantId)
+    : cartGroups();
+  const delivery = groups.reduce((s, g) => s + merchantById(g.mid).fee, 0);
+  const goods = groups.reduce((s, g) => s + g.sum, 0);
+  const total = goods + delivery;
+
+  $('#checkout-body').innerHTML = `
+    <div class="form-card">
+      <div class="form-row"><span class="k">收货地址</span><span class="v">创意园 A座 12F<br><span style="font-weight:500;color:var(--ink-3);font-size:12px">市集常客 · 138****826</span></span></div>
+      <div class="form-row"><span class="k">送达时间</span><span class="v muted">尽快送达 · 约 30 分钟</span></div>
+      <div class="form-row"><span class="k">餐具</span><span class="v muted">需要 1 份</span></div>
+    </div>
+    ${groups.map(g => {
+      const m = merchantById(g.mid);
+      const items = Object.keys(g.bag).map(pid => {
+        const p = productById(g.mid, pid);
+        return `<div class="form-row"><span class="k">${p.name} ×${g.bag[pid]}</span><span class="v">¥${p.price * g.bag[pid]}</span></div>`;
+      }).join('');
+      return `
+      <div class="form-card">
+        <div class="form-row" style="padding-top:0">
+          <span class="k serif" style="font-weight:700;color:var(--ink);font-size:15px">${m.name}</span>
+          ${groups.length > 1 ? '<span class="split-note">独立订单</span>' : ''}
+        </div>
+        ${items}
+        <div class="form-row"><span class="k">配送费</span><span class="v">¥${m.fee}</span></div>
+      </div>`;
+    }).join('')}
+    <div class="form-card">
+      <div class="form-row"><span class="k">商品金额</span><span class="v">¥${goods}</span></div>
+      <div class="form-row"><span class="k">配送费</span><span class="v">¥${delivery}</span></div>
+      <div class="form-row"><span class="k">优惠券</span><span class="v muted">满 50 减 5 · 可用</span></div>
+      <div class="form-row"><span class="k">实付</span><span class="v" style="color:var(--accent-deep);font-size:18px">¥${Math.max(total - (goods >= 50 ? 5 : 0), 0)}</span></div>
+    </div>
+    <div class="notice" style="margin:0 18px">${groups.length > 1 ? `将拆分为 <b>${groups.length} 张订单</b>，商户各自接单配送。` : '商户接单后开始备货，请保持电话畅通。'}</div>
+  `;
+  const pay = Math.max(total - (goods >= 50 ? 5 : 0), 0);
+  $('#pay-amt').textContent = pay;
+  $('#btn-pay').dataset.groups = JSON.stringify(groups.map(g => ({
+    mid: g.mid, total: g.sum + merchantById(g.mid).fee,
+    items: Object.keys(g.bag).map(pid => ({
+      name: productById(g.mid, pid).name, qty: g.bag[pid]
+    }))
+  })));
+}
+
+/* ========== 导航 ========== */
+const SCREENS = {
+  home: '#screen-home',
+  cart: '#screen-cart',
+  orders: '#screen-orders',
+  me: '#screen-me',
+  merchant: '#screen-merchant',
+  checkout: '#screen-checkout',
+  success: '#screen-success'
+};
+
+function showTab(tab) {
+  // pop all stacks first
+  while (state.stack.length) popScreen(true);
+  state.tab = tab;
+  ['home', 'cart', 'orders', 'me'].forEach(t => {
+    $(SCREENS[t]).classList.toggle('hidden', t !== tab);
+  });
+  $$('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  if (tab === 'home') renderHome();
+  if (tab === 'cart') renderCart();
+  if (tab === 'orders') renderOrders();
+  if (tab === 'me') syncBadges();
+  syncChrome();
+  syncBadges();
+}
+
+function syncChrome() {
+  const inStack = state.stack.length > 0;
+  $('#tabbar').style.display = inStack ? 'none' : '';
+  const showCartFooter = !inStack && state.tab === 'cart';
+  $('#cart-footer').classList.toggle('hidden', !showCartFooter);
+  $('#cart-footer').style.display = showCartFooter ? 'flex' : 'none';
+  const showFloat = state.stack[state.stack.length - 1] === 'merchant';
+  $('#m-float').classList.toggle('hidden', !showFloat);
+  if (showFloat) renderMerchant();
+}
+
+function pushScreen(name, setup) {
+  const el = $(SCREENS[name]);
+  if (setup) setup();
+  el.classList.remove('hidden');
+  el.classList.add('enter-push');
+  el.scrollTop = 0;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => el.classList.remove('enter-push'));
+  });
+  state.stack.push(name);
+  syncChrome();
+}
+
+function popScreen(instant) {
+  const name = state.stack.pop();
+  if (!name) return;
+  const el = $(SCREENS[name]);
+  if (instant) {
+    el.classList.add('hidden', 'enter-push');
+    el.classList.remove('exit-push');
+    syncChrome();
+    return;
+  }
+  el.classList.add('exit-push');
+  setTimeout(() => {
+    el.classList.add('hidden', 'enter-push');
+    el.classList.remove('exit-push');
+    syncChrome();
+  }, 320);
+}
+
+/* ========== 事件 ========== */
+document.addEventListener('click', (e) => {
+  const t = e.target;
+
+  // tabs
+  const tab = t.closest('[data-tab]');
+  if (tab) {
+    showTab(tab.dataset.tab);
+    return;
+  }
+
+  // back
+  if (t.closest('[data-back]')) {
+    popScreen();
+    return;
+  }
+
+  // home category
+  const chip = t.closest('[data-chip]');
+  if (chip) {
+    state.homeCat = chip.dataset.chip;
+    renderHome();
+    return;
+  }
+
+  // merchant category
+  const mchip = t.closest('[data-mcat]');
+  if (mchip) {
+    state.mCat = mchip.dataset.mcat;
+    renderMerchant();
+    return;
+  }
+
+  // open merchant
+  const mc = t.closest('[data-merchant]');
+  if (mc) {
+    const m = merchantById(mc.dataset.merchant);
+    state.currentMerchant = m;
+    state.mCat = '全部';
+    pushScreen('merchant', renderMerchant);
+    return;
+  }
+
+  // stepper
+  const act = t.closest('[data-act]');
+  if (act) {
+    const mid = act.dataset.mid, pid = act.dataset.pid;
+    const q = qtyOf(mid, pid);
+    if (act.dataset.act === 'inc') {
+      setQty(mid, pid, q + 1);
+      flyDot(act);
+    } else {
+      setQty(mid, pid, q - 1);
+    }
+    // re-render relevant screens
+    if (state.currentMerchant && mid === state.currentMerchant.id) renderMerchant();
+    if (state.tab === 'cart' && !state.stack.length) renderCart();
+    if (state.stack.includes('merchant') && state.currentMerchant) {
+      // keep merchant float in sync when adding from cart... cart is under
+    }
+    syncBadges();
+    return;
+  }
+
+  // merchant float go
+  if (t.closest('#m-float-go')) {
+    const m = state.currentMerchant;
+    const { sum } = merchantSubtotal(m.id);
+    if (sum < m.min) {
+      toast(`还差 ¥${m.min - sum} 起送`);
+      return;
+    }
+    pushScreen('checkout', () => renderCheckout(m.id));
+    return;
+  }
+
+  // cart checkout
+  if (t.closest('#btn-checkout')) {
+    if (!cartCount()) {
+      toast('购物车还是空的');
+      return;
+    }
+    pushScreen('checkout', () => renderCheckout(null));
+    return;
+  }
+
+  // pay
+  if (t.closest('#btn-pay')) {
+    const groups = JSON.parse($('#btn-pay').dataset.groups || '[]');
+    const now = new Date();
+    const time = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    groups.forEach((g, i) => {
+      state.orders.unshift({
+        id: 'MJ' + Date.now().toString().slice(-6) + i,
+        mid: g.mid,
+        items: g.items,
+        total: g.total,
+        status: '备货中',
+        time
+      });
+    });
+    // clear purchased merchants
+    const paidMids = new Set(groups.map(g => g.mid));
+    paidMids.forEach(mid => delete state.cart[mid]);
+    syncBadges();
+    $('#success-msg').innerHTML = groups.length > 1
+      ? `已生成 <b class="serif">${groups.length}</b> 张订单，各商户独立接单配送。<br>请留意骑手来电。`
+      : `商户已接单，正在为你备货。<br>预计 30 分钟内送达创意园 A座。`;
+    // replace checkout with success
+    popScreen(true);
+    pushScreen('success');
+    renderCart();
+    renderOrders();
+    return;
+  }
+
+  // success -> orders
+  if (t.closest('#btn-success-orders')) {
+    while (state.stack.length) popScreen(true);
+    showTab('orders');
+    return;
+  }
+
+  // menu goto
+  const goto = t.closest('[data-goto]');
+  if (goto) {
+    showTab(goto.dataset.goto);
+    return;
+  }
+});
+
+syncBadges();
+renderHome();
+</script>
+</body>
+</html>
