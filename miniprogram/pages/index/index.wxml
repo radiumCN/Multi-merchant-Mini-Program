@@ -1,28 +1,107 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
-    </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+<view class="page">
+  <!-- 顶栏：不随内容滚动（Skyline 下 fixed 不稳，用 flex 布局钉住） -->
+  <view class="nav" style="padding-top:{{statusBarHeight}}px;height:{{navTotal}}px">
+    <view class="nav__left" bindtap="onPickMerchant" aria-label="切换门店">
+      <view class="nav__store ellipsis">{{merchant.name || '选择门店'}}</view>
+      <view class="nav__switch" aria-label="切换门店">
+        <text class="nav__switch-glyph">⇄</text>
+      </view>
     </view>
   </view>
-</scroll-view>
+
+  <!-- 内容区独立滚动 -->
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 搜索 -->
+    <view class="search weui-flex" bindtap="onSearch" hover-class="search-hover">
+      <mp-icon type="search" size="18" color="#888"></mp-icon>
+      <text class="search__ph">搜服务、项目名称…</text>
+    </view>
+
+    <!-- Banner：只放图；文案/标签/信任后续直接做进设计图 -->
+    <view class="banner-wrap">
+      <swiper class="banner" autoplay circular indicator-dots indicator-active-color="#FFFFFF">
+        <swiper-item wx:for="{{banners}}" wx:key="id">
+          <view class="banner__card {{item.theme}}">
+            <block wx:if="{{item.image}}">
+              <image class="banner__img" src="{{item.image}}" mode="aspectFill"></image>
+            </block>
+            <block wx:else>
+              <view class="banner__art">{{item.art}}</view>
+              <view class="banner__body">
+                <view class="banner__title">{{item.title}}</view>
+                <view class="banner__sub">{{item.sub}}</view>
+              </view>
+            </block>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <!-- 金刚区 -->
+    <view class="card grid-card">
+      <view class="sec-hd">
+        <text class="sec-title">一站式到家便民服务</text>
+        <text class="sec-more theme-primary" bindtap="goAllServices">全部服务 ›</text>
+      </view>
+      <view class="weui-grids">
+        <view
+          class="weui-grid"
+          wx:for="{{quick}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onCategoryTap"
+          hover-class="grid-hover"
+        >
+          <view class="grid-icon {{item.theme}}">{{item.icon}}</view>
+          <text class="weui-grid__label">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 热门服务 -->
+    <view class="sec-hd">
+      <text class="sec-title">本店精选 · 参考价</text>
+      <text class="sec-more theme-primary" bindtap="goCart" aria-label="购物车">
+        购物车<mp-badge wx:if="{{cartCount > 0}}" style="margin-left:8rpx" content="{{cartCount}}"></mp-badge>
+      </text>
+    </view>
+    <service-card
+      wx:for="{{hotServices}}"
+      wx:key="id"
+      service="{{item}}"
+      bind:open="onServiceTap"
+    />
+
+    <!-- 合作门店（多商户） -->
+    <view class="sec-hd">
+      <text class="sec-title">合作门店</text>
+      <text class="sec-more theme-primary" bindtap="onPickMerchant">切换 ›</text>
+    </view>
+    <view class="card">
+      <view
+        class="m-row"
+        wx:for="{{merchantList}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onMerchantTap"
+        hover-class="row-hover"
+      >
+        <view class="merchant-ava {{item.theme}}">{{item.short[0]}}</view>
+        <view class="m-row__bd">
+          <view class="m-row__name ellipsis">{{item.name}}</view>
+          <view class="m-row__slogan ellipsis">{{item.slogan}}</view>
+        </view>
+        <view class="m-row__meta">{{item.distance}}</view>
+      </view>
+    </view>
+
+    <!-- 页脚热线 -->
+    <view class="weui-footer">
+      <view>全国服务热线：4008313888</view>
+      <view>质量监督：18827961136</view>
+      <view>已经到底了</view>
+    </view>
+  </scroll-view>
+
+  <service-fab nav-offset="{{navTotal}}"></service-fab>
+</view>

@@ -1,0 +1,40 @@
+<view class="page">
+  <view class="tab-bar">
+    <order-tabs tabs="{{tabs}}" active="{{active}}" bindchange="onTab"></order-tabs>
+  </view>
+
+  <block wx:if="{{list.length}}">
+    <view class="order-card" wx:for="{{list}}" wx:key="id">
+      <view class="order-card__hd weui-flex">
+        <text class="order-shop ellipsis">{{item.merchantName}}</text>
+        <text class="order-status {{item.status === '已完成' ? 'is-done' : ''}} {{item.status === '已取消' ? 'is-cancel' : ''}}">{{item.status}}</text>
+      </view>
+      <view class="order-card__items" data-id="{{item.id}}" bindtap="goDetail">
+        <view class="order-line" wx:for="{{item.items}}" wx:for-item="it" wx:key="serviceId">
+          <text class="flex-1 ellipsis">{{it.name}}</text>
+          <text class="order-qty">x{{it.qty}}</text>
+          <text class="order-price">¥{{it.price}}</text>
+        </view>
+      </view>
+      <view class="order-card__ft weui-flex">
+        <text class="order-time">{{item.createdAt}} · {{item.id}}</text>
+        <text class="order-total">合计 <text class="theme-price">¥{{item.total}}</text></text>
+      </view>
+      <view class="btn-row order-card__btns" wx:if="{{item.status === '待支付'}}">
+        <button class="btn btn-secondary" data-id="{{item.id}}" bindtap="onCancel">取消订单</button>
+        <button class="btn btn-primary" data-id="{{item.id}}" bindtap="onPay">去支付</button>
+      </view>
+      <view class="btn-row order-card__btns" wx:elif="{{item.status === '待服务'}}">
+        <button class="btn btn-ghost" data-id="{{item.id}}" bindtap="goDetail">查看服务</button>
+      </view>
+    </view>
+  </block>
+
+  <view wx:else>
+    <empty-box text="暂无数据"></empty-box>
+    <view class="btn-row btn-row--center" style="margin-top:24rpx">
+      <button class="btn btn-primary" bindtap="goCategory">去预约服务</button>
+    </view>
+  </view>
+  <service-fab></service-fab>
+</view>

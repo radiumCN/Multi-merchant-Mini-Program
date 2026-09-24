@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="tips">多商户平台 · 选择服务门店后即可下单</view>
+  <view class="m-card card" wx:for="{{list}}" wx:key="id">
+    <view class="m-card__row weui-flex" data-id="{{item.id}}" bindtap="onDetail">
+      <view class="m-logo {{item.theme}}">{{item.short[0]}}</view>
+      <view class="m-bd flex-1">
+        <view class="m-name ellipsis">
+          {{item.name}}
+          <text class="m-cur" wx:if="{{currentId === item.id}}">当前</text>
+        </view>
+        <view class="m-slogan ellipsis">{{item.slogan}}</view>
+        <view class="m-meta">
+          <text class="theme-primary">★ {{item.rating}}</text>
+          <text>月售{{item.monthly}}</text>
+          <text>{{item.distance}}</text>
+        </view>
+        <view class="m-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:for-item="t" wx:key="*this">{{t}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="m-card__ft btn-row">
+      <button class="btn btn-secondary" data-id="{{item.id}}" bindtap="onDetail">进店</button>
+      <button class="btn {{currentId === item.id ? 'btn-secondary' : 'btn-primary'}}" data-id="{{item.id}}" bindtap="onPick">
+        {{currentId === item.id ? '已选择' : '选此门店'}}
+      </button>
+    </view>
+  </view>
+</view>

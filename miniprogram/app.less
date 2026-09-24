@@ -1,10 +1,481 @@
-/**app.wxss**/
-.container {
-  height: 100%;
+/**
+ * WeUI 官方设计体系基础样式
+ * 规范来源：WeUI Design（微信官方设计团队）
+ * https://github.com/Tencent/weui
+ */
+@weuiColorPrimary: #07C160;
+@weuiColorWarn: #FA5151;
+@weuiColorLink: #576B95;
+@weuiColorText: #191919;
+@weuiColorTextSecondary: #888888;
+@weuiColorTextTips: #B2B2B2;
+@weuiColorBg: #EDEDED;
+@weuiColorBgWhite: #FFFFFF;
+@weuiColorBgDark: #191919;
+@weuiColorLine: #E5E5E5;
+@weuiColorLineLight: #ECECEC;
+
+page {
+  background: @weuiColorBg;
+  color: @weuiColorText;
+  font-size: 28rpx;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text, button, input, image, scroll-view, navigator {
+  box-sizing: border-box;
+}
+
+/* —— WeUI Layout —— */
+.weui-flex {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+}
+.weui-flex__item {
+  flex: 1;
+  min-width: 0;
+}
+.weui-center {
+  text-align: center;
+}
+.weui-row {
+  display: flex;
+  flex-direction: row;
+}
+.weui-column {
   display: flex;
   flex-direction: column;
+}
+
+/* —— WeUI Cells —— */
+.weui-cells {
+  margin-top: 16rpx;
+  background-color: @weuiColorBgWhite;
+  overflow: hidden;
+  position: relative;
+  &::before,
+  &::after {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    color: @weuiColorLine;
+    transform: scaleY(0.5);
+  }
+  &::before {
+    top: 0;
+    border-top: 1px solid @weuiColorLine;
+  }
+  &::after {
+    bottom: 0;
+    border-bottom: 1px solid @weuiColorLine;
+  }
+}
+.weui-cells__title {
+  margin-top: 16rpx;
+  padding: 16rpx 32rpx;
+  color: @weuiColorTextSecondary;
+  font-size: 26rpx;
+}
+.weui-cell {
+  padding: 28rpx 32rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+  &::before {
+    content: ' ';
+    position: absolute;
+    left: 32rpx;
+    right: 0;
+    top: 0;
+    height: 1px;
+    border-top: 1px solid @weuiColorLine;
+    transform: scaleY(0.5);
+    transform-origin: 0 0;
+  }
+  &:first-child::before {
+    display: none;
+  }
+}
+.weui-cell_access {
+  cursor: pointer;
+  &:active {
+    background-color: #ECECEC;
+  }
+}
+.weui-cell__hd {
+  margin-right: 24rpx;
+}
+.weui-cell__bd {
+  flex: 1;
+  min-width: 0;
+}
+.weui-cell__ft {
+  color: @weuiColorTextSecondary;
+  text-align: right;
+}
+.weui-cell__ft_in-access {
+  padding-right: 40rpx;
+  position: relative;
+  &::after {
+    content: ' ';
+    display: inline-block;
+    width: 16rpx;
+    height: 16rpx;
+    border-width: 2rpx 2rpx 0 0;
+    border-color: #C8C8CD;
+    border-style: solid;
+    transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+    position: absolute;
+    top: 50%;
+    margin-top: -8rpx;
+    right: 12rpx;
+  }
+}
+
+/* —— WeUI Buttons —— */
+.weui-btn {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32rpx;
+  padding-right: 32rpx;
+  box-sizing: border-box;
+  font-size: 32rpx;
+  text-align: center;
+  text-decoration: none;
+  line-height: 2.5555;
+  border-radius: 8rpx;
+  overflow: hidden;
+  user-select: none;
+  &:active {
+    opacity: 0.85;
+  }
+}
+.weui-btn_primary {
+  color: #FFFFFF;
+  background-color: @weuiColorPrimary;
+}
+.weui-btn_default {
+  color: @weuiColorText;
+  background-color: #F2F2F2;
+}
+.weui-btn_warn {
+  color: #FFFFFF;
+  background-color: @weuiColorWarn;
+}
+.weui-btn_plain-primary {
+  color: @weuiColorPrimary;
+  border: 1px solid @weuiColorPrimary;
+  background: transparent;
+}
+.weui-btn_disabled {
+  opacity: 0.5;
+}
+.weui-btn_mini {
+  display: inline-block;
+  padding: 0 28rpx;
+  line-height: 2;
+  font-size: 26rpx;
+  min-width: 88rpx;
+  border-radius: 6rpx;
+}
+
+/* —— WeUI Badge / Tag —— */
+.weui-badge {
+  display: inline-block;
+  text-align: center;
+  background: @weuiColorWarn;
+  border-radius: 100rpx;
+  color: #FFFFFF;
+  font-size: 20rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  min-width: 28rpx;
+  padding: 0 8rpx;
+}
+.weui-badge_dot {
+  width: 16rpx;
+  height: 16rpx;
+  min-width: 0;
+  padding: 0;
+}
+
+/* —— WeUI Panel / Media —— */
+.weui-panel {
+  margin: 16rpx 0;
+  background-color: @weuiColorBgWhite;
+}
+.weui-panel__hd {
+  padding: 24rpx 32rpx;
+  color: @weuiColorTextSecondary;
+  font-size: 28rpx;
+}
+.weui-media-box {
+  padding: 24rpx 32rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  &::before {
+    content: ' ';
+    position: absolute;
+    left: 32rpx;
+    right: 0;
+    top: 0;
+    height: 1px;
+    border-top: 1px solid @weuiColorLine;
+    transform: scaleY(0.5);
+    transform-origin: 0 0;
+  }
+}
+.weui-media-box__hd {
+  margin-right: 24rpx;
+  width: 120rpx;
+  height: 120rpx;
+  line-height: 120rpx;
+  text-align: center;
+}
+.weui-media-box__bd {
+  flex: 1;
+  min-width: 0;
+}
+.weui-media-box__title {
+  font-size: 30rpx;
+  font-weight: 500;
+}
+.weui-media-box__desc {
+  color: @weuiColorTextSecondary;
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+.weui-media-box__ft {
+  color: @weuiColorTextTips;
+  font-size: 24rpx;
+}
+
+/* —— WeUI Grid —— */
+.weui-grids {
+  display: flex;
+  flex-wrap: wrap;
+  background: @weuiColorBgWhite;
+}
+.weui-grid {
+  width: 25%;
+  padding: 32rpx 10rpx;
+  text-align: center;
+  position: relative;
+  box-sizing: border-box;
+}
+.weui-grid__label {
+  font-size: 26rpx;
+  color: @weuiColorText;
+  margin-top: 12rpx;
+  display: block;
+}
+
+/* —— WeUI Loadmore / Footer —— */
+.weui-loadmore {
+  width: 65%;
+  margin: 32rpx auto;
+  text-align: center;
+}
+.weui-loadmore__tips {
+  display: inline-block;
+  vertical-align: middle;
+  color: @weuiColorTextSecondary;
+}
+.weui-footer {
+  color: @weuiColorTextTips;
+  font-size: 26rpx;
+  text-align: center;
+  padding: 40rpx 0;
+}
+
+/* —— 业务主题 —— */
+.theme-primary {
+  color: @weuiColorPrimary;
+}
+.theme-price {
+  color: #FA5151;
+  font-weight: 600;
+}
+.price-symbol {
+  font-size: 24rpx;
+  margin-right: 2rpx;
+}
+.card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  margin: 16rpx 24rpx;
+  overflow: hidden;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.flex-between {
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
-  box-sizing: border-box;
-} 
+}
+.flex-1 {
+  flex: 1;
+  min-width: 0;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ellipsis-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.safe-bottom {
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+/* 色块占位（无图时） */
+.ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 700;
+  background: linear-gradient(135deg, #07C160, #3AD680);
+}
+.ph-green { background: linear-gradient(135deg, #07C160, #3AD680); }
+.ph-teal { background: linear-gradient(135deg, #10AEFF, #5FD0FF); }
+.ph-orange { background: linear-gradient(135deg, #FF976A, #FFC09F); }
+.ph-blue { background: linear-gradient(135deg, #5C6BC0, #9FA8DA); }
+.ph-purple { background: linear-gradient(135deg, #7E57C2, #B39DDB); }
+.ph-red { background: linear-gradient(135deg, #E64340, #FF8A80); }
+
+/* 空状态 */
+.empty-wrap {
+  padding: 120rpx 40rpx;
+  text-align: center;
+  color: #B2B2B2;
+}
+.empty-title {
+  margin-top: 24rpx;
+  color: #888;
+  font-size: 28rpx;
+}
+
+/* —— 统一按钮 ——
+   尺寸：高 68rpx / 圆角 34rpx / 字 26rpx
+   层级：primary 主操作 | secondary 次操作 | ghost 描边
+*/
+.btn {
+  margin: 0 !important;
+  padding: 0 36rpx !important;
+  height: 68rpx !important;
+  min-height: 68rpx !important;
+  line-height: 68rpx !important;
+  border-radius: 34rpx !important;
+  font-size: 26rpx !important;
+  font-weight: 500;
+  min-width: 160rpx;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.btn::after {
+  display: none !important;
+  border: none !important;
+  content: none !important;
+}
+.btn:active {
+  opacity: 0.85;
+}
+
+.btn-primary {
+  background: #07c160 !important;
+  color: #ffffff !important;
+  border: 1rpx solid #07c160 !important;
+}
+.btn-primary:active {
+  background: #06ad56 !important;
+}
+
+.btn-secondary {
+  background: #f5f5f5 !important;
+  color: #191919 !important;
+  border: 1rpx solid #f5f5f5 !important;
+}
+.btn-secondary:active {
+  background: #ebebeb !important;
+}
+
+.btn-ghost {
+  background: #ffffff !important;
+  color: #07c160 !important;
+  border: 1rpx solid #07c160 !important;
+}
+.btn-ghost:active {
+  background: #e8f8ee !important;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16rpx;
+}
+.btn-row--center {
+  justify-content: center;
+}
+.btn-row .btn {
+  flex: 1;
+  max-width: 220rpx;
+}
+.btn-row--center .btn {
+  max-width: 280rpx;
+}
+
+.btn[disabled],
+.btn.disabled {
+  opacity: 0.45;
+}
+/* —— 轻量进场：不做透明度渐变，避免“点了像在等” —— */
+.page {
+  animation: page-enter 0.16s ease-out both;
+}
+@keyframes page-enter {
+  from { transform: translateY(8rpx); }
+  to { transform: none; }
+}
+
+.btn {
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    animation: none !important;
+  }
+  .btn {
+    transition: none !important;
+    transform: none !important;
+  }
+}

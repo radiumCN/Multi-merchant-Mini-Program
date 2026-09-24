@@ -1,0 +1,107 @@
+.fab {
+  position: fixed;
+  z-index: 9999;
+  width: 72px;
+  height: 92px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.fab.is-snap {
+  transition: left 0.28s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.fab.is-drag {
+  transition: none;
+}
+
+.fab__btn {
+  touch-action: none;
+  width: 72px !important;
+  height: 92px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  line-height: 1;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.fab__btn::after {
+  display: none !important;
+  border: none !important;
+  content: none !important;
+}
+
+.fab__btn[disabled] {
+  opacity: 1;
+}
+
+.fab__avatar {
+  width: 56px;
+  height: 56px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f3d3b5 0%, #f3d3b5 46%, #07c160 46%, #3ad680 100%);
+  box-shadow: 0 8px 18px rgba(7, 193, 96, 0.32);
+  border: 2px solid #fff;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.fab__head {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff0e2;
+  box-shadow: 0 0 0 2px #e8a87c;
+}
+
+.fab__body {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 22px;
+  border-radius: 18px 18px 0 0;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.fab__phone {
+  position: absolute;
+  right: 10px;
+  top: 22px;
+  width: 12px;
+  height: 8px;
+  border: 2px solid #07c160;
+  border-radius: 3px;
+  background: #fff;
+  transform: rotate(-18deg);
+}
+
+.fab__tag {
+  margin-top: 4px;
+  background: #07c160;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1.2;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 10px rgba(7, 193, 96, 0.25);
+}

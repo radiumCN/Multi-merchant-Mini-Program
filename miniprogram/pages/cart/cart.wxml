@@ -1,0 +1,47 @@
+<view class="page">
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="notice" wx:if="{{groups.length > 1}}">
+      车里有 <text class="theme-primary">{{groups.length}}</text> 家门店的服务，结算后将按门店拆单。
+    </view>
+
+    <block wx:if="{{!isEmpty}}">
+      <view class="group card" wx:for="{{groups}}" wx:key="merchantId">
+        <view class="group__hd weui-flex">
+          <view class="group__logo {{item.theme}}">{{item.merchantName[0]}}</view>
+          <text class="group__name ellipsis flex-1">{{item.merchantName}}</text>
+          <text class="split-note" wx:if="{{groups.length > 1}}">独立预约</text>
+        </view>
+        <view class="group__item weui-flex" wx:for="{{item.items}}" wx:for-item="it" wx:key="serviceId">
+          <view class="flex-1" data-id="{{it.serviceId}}" bindtap="goDetail">
+            <view class="item-name">{{it.name}}</view>
+            <view class="item-price theme-price">¥{{it.price}}</view>
+          </view>
+          <view class="stepper">
+            <view class="step minus" data-id="{{it.serviceId}}" bindtap="onMinus">−</view>
+            <text class="qty">{{it.qty}}</text>
+            <view class="step plus" data-id="{{it.serviceId}}" bindtap="onPlus">+</view>
+          </view>
+        </view>
+        <view class="group__ft">小计 <text class="theme-price">¥{{item.sum}}</text></view>
+      </view>
+      <view class="clear-line" bindtap="clearAll">清空购物车</view>
+    </block>
+
+    <view wx:else>
+      <empty-box text="购物车是空的"></empty-box>
+      <view class="btn-row btn-row--center" style="margin-top:24rpx">
+        <button class="btn btn-primary" bindtap="goHome">去逛逛</button>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 结算栏钉底 -->
+  <view class="checkout-bar" wx:if="{{!isEmpty}}">
+    <view class="flex-1">
+      <view class="ck-label">合计</view>
+      <view class="ck-total theme-price">¥{{total}}</view>
+    </view>
+    <button class="btn btn-primary" bindtap="checkout">去结算</button>
+  </view>
+  <service-fab wx:if="{{isEmpty}}"></service-fab>
+</view>

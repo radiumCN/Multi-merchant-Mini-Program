@@ -1,0 +1,120 @@
+.empty {
+  padding: 120rpx 40rpx 80rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scene {
+  position: relative;
+  width: 360rpx;
+  height: 280rpx;
+  margin-bottom: 36rpx;
+}
+
+/* 山丘 */
+.hill {
+  position: absolute;
+  border-radius: 50% 50% 0 0;
+  background: #f0f0f0;
+}
+.hill--back {
+  width: 280rpx;
+  height: 100rpx;
+  left: 20rpx;
+  bottom: 30rpx;
+  background: #f3f3f3;
+}
+.hill--front {
+  width: 200rpx;
+  height: 70rpx;
+  left: 80rpx;
+  bottom: 20rpx;
+  background: #ebebeb;
+}
+
+/* 树 */
+.tree {
+  position: absolute;
+  bottom: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+.tree--left {
+  left: 28rpx;
+}
+.tree--right {
+  right: 28rpx;
+}
+.tree__leaf {
+  width: 28rpx;
+  height: 48rpx;
+  background: #d9d9d9;
+  border-radius: 50% 50% 40% 40%;
+}
+.tree--right .tree__leaf {
+  width: 22rpx;
+  height: 36rpx;
+}
+.tree__trunk {
+  width: 6rpx;
+  height: 14rpx;
+  background: #cfcfcf;
+  border-radius: 2rpx;
+}
+
+/* 剪贴板 */
+.board {
+  position: absolute;
+  left: 50%;
+  top: 10rpx;
+  transform: translateX(-50%);
+  width: 150rpx;
+  height: 190rpx;
+  background: #ececec;
+  border-radius: 16rpx;
+  z-index: 3;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+.board__clip {
+  position: absolute;
+  top: -12rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64rpx;
+  height: 24rpx;
+  background: #e0e0e0;
+  border-radius: 8rpx;
+}
+.board__paper {
+  position: absolute;
+  left: 18rpx;
+  right: 18rpx;
+  top: 36rpx;
+  bottom: 24rpx;
+  background: #f7f7f7;
+  border-radius: 8rpx;
+  padding: 24rpx 18rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.board__line {
+  height: 10rpx;
+  background: #e2e2e2;
+  border-radius: 6rpx;
+}
+.board__line--lg {
+  width: 85%;
+}
+.board__line--sm {
+  width: 55%;
+}
+
+.empty__text {
+  font-size: 28rpx;
+  color: #b2b2b2;
+  letter-spacing: 2rpx;
+}

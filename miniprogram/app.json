@@ -1,13 +1,60 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/category/category",
+    "pages/service/service",
+    "pages/mine/mine",
+    "pages/merchants/merchants",
+    "pages/merchant/merchant",
+    "pages/detail/detail",
+    "pages/cart/cart",
+    "pages/orders/orders",
+    "pages/order-confirm/order-confirm",
+    "pages/address/address",
+    "pages/notice/notice"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationStyle": "custom"
+    "navigationBarTitleText": "多商户到家",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#F7F7F7",
+    "style": "v2"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#07C160",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/tab/home.png",
+        "selectedIconPath": "assets/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/category/category",
+        "text": "分类",
+        "iconPath": "assets/tab/category.png",
+        "selectedIconPath": "assets/tab/category-active.png"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "服务",
+        "iconPath": "assets/tab/service.png",
+        "selectedIconPath": "assets/tab/service-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tab/mine.png",
+        "selectedIconPath": "assets/tab/mine-active.png"
+      }
+    ]
   },
   "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
   "rendererOptions": {
     "skyline": {
       "defaultDisplayBlock": true,
@@ -15,8 +62,5 @@
       "sdkVersionBegin": "3.0.0",
       "sdkVersionEnd": "15.255.255"
     }
-  },
-  "componentFramework": "glass-easel",
-  "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents"
+  }
 }

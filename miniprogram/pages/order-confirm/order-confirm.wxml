@@ -1,0 +1,47 @@
+<view class="page">
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="card addr weui-flex" bindtap="goAddress">
+      <view class="flex-1">
+        <view class="addr__name">{{address.name}} {{address.phone}}</view>
+        <view class="addr__detail">{{address.detail}}</view>
+      </view>
+      <text class="addr__go">›</text>
+    </view>
+
+    <view class="card" wx:for="{{groups}}" wx:key="merchantId">
+      <view class="shop-name">{{item.merchantName}}</view>
+      <view class="line weui-flex" wx:for="{{item.items}}" wx:for-item="it" wx:key="serviceId">
+        <text class="flex-1 ellipsis">{{it.name}} ×{{it.qty}}</text>
+        <text class="theme-price">¥{{it.price * it.qty}}</text>
+      </view>
+      <view class="line weui-flex">
+        <text class="flex-1">上门服务费</text>
+        <text>¥5</text>
+      </view>
+      <view class="line weui-flex">
+        <text class="flex-1">本店小计</text>
+        <text class="theme-price">¥{{item.sum + 5}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="line weui-flex"><text class="flex-1">商品金额</text><text>¥{{goodsTotal}}</text></view>
+      <view class="line weui-flex"><text class="flex-1">服务费</text><text>¥{{fee}}</text></view>
+      <view class="line weui-flex"><text class="flex-1">优惠券</text><text class="muted">满 50 减 5</text></view>
+      <view class="line weui-flex"><text class="flex-1">实付</text><text class="theme-price pay">¥{{payTotal}}</text></view>
+    </view>
+
+    <view class="notice" wx:if="{{groups.length > 1}}">
+      将拆分为 <text class="theme-primary">{{groups.length}}</text> 笔服务预约，由各门店分别联系。
+    </view>
+    <view style="height:24rpx"></view>
+  </scroll-view>
+
+  <view class="foot">
+    <view class="flex-1">
+      <text class="muted">合计 </text>
+      <text class="theme-price pay">¥{{payTotal}}</text>
+    </view>
+    <button class="btn btn-primary" bindtap="submit">提交预约</button>
+  </view>
+</view>

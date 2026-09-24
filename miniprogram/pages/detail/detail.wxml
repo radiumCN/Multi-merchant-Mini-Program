@@ -1,0 +1,51 @@
+<view class="page" wx:if="{{service}}">
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="hero ph {{service.theme}}">
+      <view class="hero__art">{{service.name[0]}}</view>
+      <view class="hero__title">{{service.name}}</view>
+      <view class="hero__sub">{{categoryName}} · 上门服务</view>
+    </view>
+
+    <view class="card price-card weui-flex">
+      <view class="flex-1">
+        <text class="theme-price price-big"><text class="price-symbol">¥</text>{{service.price}}</text>
+        <text class="unit">/{{service.unit}}起</text>
+        <text class="origin" wx:if="{{service.originPrice}}">¥{{service.originPrice}}</text>
+      </view>
+      <text class="sales">已售{{service.sales}}</text>
+    </view>
+
+    <view class="card">
+      <mp-cells>
+        <view bindtap="goDesc">
+          <mp-cell title="服务说明" link value="{{service.desc}}"></mp-cell>
+        </view>
+        <view bindtap="goMerchant">
+          <mp-cell title="提供门店" link value="{{merchant.name}}"></mp-cell>
+        </view>
+        <view bindtap="goGuarantee">
+          <mp-cell title="服务保障" link value="自营团队 · 质保无忧 · 价格透明"></mp-cell>
+        </view>
+        <view bindtap="callPhone">
+          <mp-cell title="联系电话" link value="{{merchant.phone}}"></mp-cell>
+        </view>
+        <view bindtap="openMap">
+          <mp-cell title="门店地址" link value="{{merchant.address}}"></mp-cell>
+        </view>
+      </mp-cells>
+    </view>
+
+    <view class="card tips">
+      <view class="tips__title">温馨提示</view>
+      <view class="tips__item">1. 下单后门店将在 30 分钟内联系确认上门时间</view>
+      <view class="tips__item">2. 服务前请保持电话畅通</view>
+      <view class="tips__item">3. 具体价格以现场评估为准，明码标价</view>
+    </view>
+  </scroll-view>
+
+  <view class="foot btn-row">
+    <button class="btn btn-secondary" bindtap="callPhone">联系门店</button>
+    <button class="btn btn-secondary" bindtap="addCart">加入购物车</button>
+    <button class="btn btn-primary" bindtap="bookNow">立即预约</button>
+  </view>
+</view>

@@ -1,0 +1,28 @@
+.tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #ececec;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0 20rpx;
+  font-size: 28rpx;
+  color: #576b95;
+  position: relative;
+}
+.tab.is-on {
+  color: #07c160;
+  font-weight: 600;
+}
+.tab.is-on::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 6rpx;
+  border-radius: 4rpx;
+  background: #07c160;
+}

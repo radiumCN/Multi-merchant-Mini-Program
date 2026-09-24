@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "服务",
+  "usingComponents": {
+    "mp-icon": "weui-miniprogram/icon/icon",
+    "mp-badge": "weui-miniprogram/badge/badge",
+    "service-card": "/components/service-card/service-card",
+    "empty-box": "/components/empty-box/empty-box",
+    "service-fab": "/components/service-fab/service-fab"
+  }
+}

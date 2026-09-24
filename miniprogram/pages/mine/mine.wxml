@@ -1,0 +1,86 @@
+<view class="page">
+  <!-- 头部 -->
+  <view class="hero">
+    <view class="hero__row">
+      <view class="avatar">
+        <mp-icon type="me" size="36" color="#FFFFFF"></mp-icon>
+      </view>
+      <view class="hero__name">{{nickName}}</view>
+    </view>
+  </view>
+
+  <!-- 服务订单 -->
+  <view class="card block">
+    <view class="block__hd weui-flex">
+      <text class="block__title">服务订单</text>
+      <text class="block__all" data-status="全部" bindtap="goOrders">全部 ›</text>
+    </view>
+    <view class="order-grid">
+      <view
+        class="order-item"
+        wx:for="{{serviceStats}}"
+        wx:key="key"
+        data-status="{{item.key}}"
+        bindtap="goOrders"
+      >
+        <view class="order-icon {{item.theme}}">
+          <text>{{item.label[0]}}</text>
+          <view class="order-badge" wx:if="{{item.count > 0}}">{{item.count}}</view>
+        </view>
+        <text class="order-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品订单 -->
+  <view class="card block">
+    <view class="block__hd weui-flex">
+      <text class="block__title">商品订单</text>
+      <text class="block__all" data-status="全部" bindtap="goOrders">全部 ›</text>
+    </view>
+    <view class="order-grid order-grid--5">
+      <view class="order-item" wx:for="{{goodsStats}}" wx:key="key" data-status="{{item.key}}" bindtap="goOrders">
+        <view class="order-icon {{item.theme}}"><text>{{item.label[0]}}</text></view>
+        <text class="order-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 资产 cells（WeUI） -->
+  <view class="card">
+    <mp-cells>
+      <view bindtap="goCart">
+        <mp-cell title="我的购物车" link footer="{{cartCount ? cartCount + ' 件' : ''}}"></mp-cell>
+      </view>
+      <mp-cell title="我的余额" link footer="¥{{balance}}"></mp-cell>
+      <mp-cell title="我的积分" link footer="{{points}}"></mp-cell>
+      <mp-cell title="我的套餐" link></mp-cell>
+      <mp-cell title="拼团订单" link></mp-cell>
+      <view bindtap="goAddress">
+        <mp-cell title="我的地址" link footer="{{addressText}}"></mp-cell>
+      </view>
+    </mp-cells>
+  </view>
+
+  <!-- 我的服务 -->
+  <view class="card block">
+    <view class="block__hd">
+      <text class="block__title">我的服务</text>
+    </view>
+    <view class="order-grid">
+      <view
+        class="order-item"
+        wx:for="{{myServices}}"
+        wx:key="key"
+        data-key="{{item.key}}"
+        bindtap="onServiceTap"
+      >
+        <view class="order-icon {{item.theme}}"><text>{{item.icon}}</text></view>
+        <text class="order-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-footer">已经到底了～</view>
+  <service-fab></service-fab>
+</view>

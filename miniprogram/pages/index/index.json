@@ -1,5 +1,11 @@
 {
+  "navigationStyle": "custom",
   "usingComponents": {
-    "navigation-bar": "/components/navigation-bar/navigation-bar"
+    "mp-cell": "weui-miniprogram/cell/cell",
+    "mp-cells": "weui-miniprogram/cells/cells",
+    "mp-badge": "weui-miniprogram/badge/badge",
+    "mp-icon": "weui-miniprogram/icon/icon",
+    "service-card": "/components/service-card/service-card",
+    "service-fab": "/components/service-fab/service-fab"
   }
 }

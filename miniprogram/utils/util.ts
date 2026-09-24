@@ -17,3 +17,16 @@ const formatNumber = (n: number) => {
   const s = n.toString()
   return s[1] ? s : '0' + s
 }
+
+export function toast(title: string) {
+  wx.showToast({ title, icon: 'none' })
+}
+
+export function go(url: string) {
+  if (url.startsWith('/pages/index') || url.startsWith('/pages/category') ||
+      url.startsWith('/pages/service') || url.startsWith('/pages/mine')) {
+    wx.switchTab({ url })
+  } else {
+    wx.navigateTo({ url })
+  }
+}

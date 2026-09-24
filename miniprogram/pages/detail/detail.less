@@ -1,0 +1,97 @@
+page {
+  height: 100%;
+  overflow: hidden;
+  background: #ededed;
+  touch-action: manipulation;
+}
+
+/* flex 列：内容滚动 + 底栏钉底 */
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.scroll-body {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+
+.hero {
+  height: 360rpx;
+  padding: 48rpx 40rpx;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+}
+.hero__art {
+  position: absolute;
+  right: 40rpx;
+  top: 40rpx;
+  font-size: 160rpx;
+  font-weight: 700;
+  opacity: 0.2;
+}
+.hero__title {
+  font-size: 48rpx;
+  font-weight: 700;
+}
+.hero__sub {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+.price-card {
+  margin-top: -32rpx;
+  position: relative;
+  padding: 28rpx;
+}
+.price-big {
+  font-size: 48rpx;
+  font-weight: 700;
+}
+.unit {
+  font-size: 24rpx;
+  color: #888;
+  margin-left: 8rpx;
+}
+.origin {
+  margin-left: 16rpx;
+  color: #b2b2b2;
+  text-decoration: line-through;
+  font-size: 24rpx;
+}
+.sales {
+  color: #b2b2b2;
+  font-size: 24rpx;
+}
+.tips {
+  padding: 24rpx;
+}
+.tips__title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+.tips__item {
+  font-size: 24rpx;
+  color: #888;
+  line-height: 1.7;
+}
+
+.foot {
+  flex-shrink: 0;
+  background: #fff;
+  display: flex;
+  gap: 12rpx;
+  padding: 16rpx 32rpx calc(16rpx + env(safe-area-inset-bottom));
+  border-top: 1px solid #ececec;
+}
+.foot .btn {
+  flex: 1;
+}

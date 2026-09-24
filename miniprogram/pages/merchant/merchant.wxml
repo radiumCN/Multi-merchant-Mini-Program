@@ -1,0 +1,40 @@
+<view class="page" wx:if="{{merchant}}">
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="hero ph {{merchant.theme}}">
+      <view class="hero__art">{{merchant.short[0]}}</view>
+      <view class="hero__name">{{merchant.name}}</view>
+      <view class="hero__slogan">{{merchant.slogan}}</view>
+      <view class="hero__tags">
+        <text class="htag" wx:for="{{merchant.tags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <mp-cells>
+        <mp-cell title="评分" footer="{{merchant.rating}}"></mp-cell>
+        <mp-cell title="月售" footer="{{merchant.monthly}}"></mp-cell>
+        <mp-cell title="距离" footer="{{merchant.distance}}"></mp-cell>
+        <view bindtap="openMap">
+          <mp-cell title="地址" link value="{{merchant.address}}"></mp-cell>
+        </view>
+        <view bindtap="callPhone">
+          <mp-cell title="电话" link value="{{merchant.phone}}"></mp-cell>
+        </view>
+      </mp-cells>
+    </view>
+
+    <view class="sec-title">本店服务</view>
+    <service-card
+      wx:for="{{services}}"
+      wx:key="id"
+      service="{{item}}"
+      show-stepper="{{false}}"
+      bind:open="onService"
+    />
+  </scroll-view>
+
+  <view class="foot btn-row">
+    <button class="btn btn-secondary" bindtap="callPhone">联系门店</button>
+    <button class="btn btn-primary" bindtap="useShop">选此门店</button>
+  </view>
+</view>

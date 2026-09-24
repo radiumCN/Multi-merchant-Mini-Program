@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "我的订单",
+  "usingComponents": {
+    "order-tabs": "/components/order-tabs/order-tabs",
+    "empty-box": "/components/empty-box/empty-box",
+    "service-fab": "/components/service-fab/service-fab"
+  }
+}

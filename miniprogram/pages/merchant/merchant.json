@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "门店详情",
+  "usingComponents": {
+    "mp-cells": "weui-miniprogram/cells/cells",
+    "mp-cell": "weui-miniprogram/cell/cell",
+    "service-card": "/components/service-card/service-card"
+  }
+}

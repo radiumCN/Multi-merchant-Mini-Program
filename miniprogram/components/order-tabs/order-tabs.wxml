@@ -1,0 +1,9 @@
+<view class="tabs">
+  <view
+    class="tab {{active === index ? 'is-on' : ''}}"
+    wx:for="{{tabs}}"
+    wx:key="*this"
+    data-i="{{index}}"
+    bindtap="onTap"
+  >{{item}}</view>
+</view>

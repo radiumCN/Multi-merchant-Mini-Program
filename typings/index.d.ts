@@ -1,8 +1,10 @@
-/// <reference path="./types/index.d.ts" />
-
-interface IAppOption {
+declare interface IAppOption {
   globalData: {
-    userInfo?: WechatMiniprogram.UserInfo,
+    merchantId: string
+    user: {
+      nickName: string
+      avatarUrl: string
+    }
+    cartCount: number
   }
-  userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
 }

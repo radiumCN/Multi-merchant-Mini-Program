@@ -1,0 +1,20 @@
+<view class="s-card" bindtap="onTap">
+  <view class="s-card__hd ph {{service.theme || 'ph-green'}}">{{service.name[0]}}</view>
+  <view class="s-card__bd">
+    <view class="s-card__title ellipsis">{{service.name}}</view>
+    <view class="s-card__desc ellipsis-2">{{service.desc}}</view>
+    <view class="s-card__ft">
+      <view class="theme-price">
+        <text class="price-symbol">¥</text>
+        <text class="s-card__price">{{service.price}}</text>
+        <text class="s-card__unit">/{{service.unit}}</text>
+        <text class="s-card__origin" wx:if="{{service.originPrice}}">¥{{service.originPrice}}</text>
+        <text class="s-card__from" wx:else>起</text>
+      </view>
+      <view class="s-card__sales">已售{{service.sales}}</view>
+    </view>
+  </view>
+  <view class="s-card__act" wx:if="{{showStepper}}" catchtap="onPlus" aria-label="加入购物车">
+    <text class="step-btn">+</text>
+  </view>
+</view>

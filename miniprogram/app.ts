@@ -1,18 +1,32 @@
 // app.ts
+import { loadMock, db } from './data/mock'
+
+export interface IAppOption {
+  globalData: {
+    merchantId: string
+    user: {
+      nickName: string
+      avatarUrl: string
+    }
+    cartCount: number
+  }
+}
+
 App<IAppOption>({
-  globalData: {},
+  globalData: {
+    merchantId: 'm1',
+    user: {
+      nickName: '客户0946',
+      avatarUrl: ''
+    },
+    cartCount: 0
+  },
+
   onLaunch() {
-    // 展示本地存储能力
+    loadMock()
+    this.globalData.merchantId = db.currentMerchantId
     const logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
-
-    // 登录
-    wx.login({
-      success: res => {
-        console.log(res.code)
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      },
-    })
-  },
+  }
 })

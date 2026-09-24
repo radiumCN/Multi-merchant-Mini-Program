@@ -1,0 +1,26 @@
+<view class="empty">
+  <view class="scene">
+    <!-- 远山 -->
+    <view class="hill hill--back"></view>
+    <view class="hill hill--front"></view>
+    <!-- 树 -->
+    <view class="tree tree--left">
+      <view class="tree__leaf"></view>
+      <view class="tree__trunk"></view>
+    </view>
+    <view class="tree tree--right">
+      <view class="tree__leaf"></view>
+      <view class="tree__trunk"></view>
+    </view>
+    <!-- 剪贴板 / 购物袋 -->
+    <view class="board">
+      <view class="board__clip"></view>
+      <view class="board__paper">
+        <view class="board__line board__line--lg"></view>
+        <view class="board__line"></view>
+        <view class="board__line board__line--sm"></view>
+      </view>
+    </view>
+  </view>
+  <view class="empty__text">{{text}}</view>
+</view>

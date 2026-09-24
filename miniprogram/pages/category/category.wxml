@@ -1,0 +1,50 @@
+<view class="page">
+  <!-- 搜索：自定义 input，不再用 mp-searchbar -->
+  <view class="search-wrap">
+    <view class="search weui-flex">
+      <mp-icon type="search" size="18" color="#888"></mp-icon>
+      <input
+        class="search__input"
+        placeholder="搜服务、项目名称…"
+        placeholder-class="search__ph"
+        value="{{keyword}}"
+        confirm-type="search"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+      />
+      <view class="search__clear" wx:if="{{keyword}}" bindtap="onSearchClear">×</view>
+    </view>
+  </view>
+
+  <view class="shop-line" bindtap="goMerchants">
+    <text class="ellipsis">{{merchantName || '全部门店'}}</text>
+    <text class="theme-primary">切换 ›</text>
+  </view>
+
+  <view class="body weui-flex">
+    <!-- 左侧分类 -->
+    <scroll-view class="side" scroll-y>
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="side-item {{activeId === item.id ? 'is-active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onCategory"
+      >{{item.name}}</view>
+    </scroll-view>
+
+    <!-- 右侧服务 -->
+    <scroll-view class="main" scroll-y>
+      <block wx:if="{{services.length}}">
+        <service-card
+          wx:for="{{services}}"
+          wx:key="id"
+          service="{{item}}"
+          show-stepper="{{false}}"
+          bind:open="onService"
+        />
+      </block>
+      <empty-box wx:else text="{{keyword ? '未找到相关服务' : '暂无相关服务'}}"></empty-box>
+    </scroll-view>
+  </view>
+</view>

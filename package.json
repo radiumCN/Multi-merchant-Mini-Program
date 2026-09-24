@@ -1,15 +1,19 @@
 {
-  "name": "miniprogram-ts-less-quickstart",
+  "name": "multi-merchant-miniprogram",
   "version": "1.0.0",
-  "description": "",
+  "description": "多商户到家服务微信小程序（WeUI）",
   "scripts": {
+    "postinstall": "echo \"请在微信开发者工具中执行：工具 → 构建 npm\""
   },
-  "keywords": [],
+  "keywords": [
+    "miniprogram",
+    "weui",
+    "multi-merchant"
+  ],
   "author": "",
-  "license": "",
+  "license": "MIT",
   "dependencies": {
-  },
-  "devDependencies": {
-    "miniprogram-api-typings": "^2.8.3-1"
+    "miniprogram-api-typings": "^2.8.3-1",
+    "weui-miniprogram": "^1.5.6"
   }
 }

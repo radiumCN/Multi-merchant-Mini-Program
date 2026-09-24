@@ -1,0 +1,23 @@
+<view
+  wx:if="{{ready}}"
+  class="fab {{dragging ? 'is-drag' : 'is-snap'}}"
+  style="left:{{left}}px;top:{{top}}px;"
+  catchtouchstart="onTouchStart"
+  catchtouchmove="onTouchMove"
+  catchtouchend="onTouchEnd"
+  catchtouchcancel="onTouchEnd"
+>
+  <button
+    class="fab__btn"
+    size="mini"
+    open-type="contact"
+    disabled="{{dragging}}"
+  >
+    <view class="fab__avatar">
+      <view class="fab__head"></view>
+      <view class="fab__body"></view>
+      <view class="fab__phone"></view>
+    </view>
+    <view class="fab__tag">联系客服</view>
+  </button>
+</view>
